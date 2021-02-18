@@ -1,8 +1,9 @@
 package com.willmu.order.service.impl;
 
 import com.willmu.order.feign.CreditService;
-import com.willmu.order.service.OrderService;
 import com.willmu.order.feign.StockService;
+import com.willmu.order.service.OrderService;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,16 @@ public class OrderServiceImpl implements OrderService {
         this.creditService = creditService;
     }
 
+    /** 创建订单
+     * @param product 商品id
+     * @param num     下单数量
+     * @param uid     用户id
+     * @param credit  增加积分
+     * @return
+     */
     @Override
+//    @Transactional
+    @GlobalTransactional
     public String create(String product, Integer num, String uid, Integer credit) {
         log.info("创建订单成功");
         stockService.decrease(product, num);
